@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <div id="app">
+        <todo-list></todo-list>
+    </div>
+</head>
+
+<body>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        Vue.component('todo-item', {
+            props: {
+                title: String,
+                del: {
+                    type: Boolean,
+                    default: false
+                }
+            },
+            template: `
+        <li>
+            <span v-if="!del">{{title}}</span>
+            <span v-else style="text-decoration:line-through">{{title}}</span>
+            <button v-show="!del" @click="handlerClick">删除</button>
+        </li>
+        `,
+            data: function () {
+                return {}
+            },
+            methods: {
+                handlerClick() {
+                    console.log("点击了删除按钮");
+                    this.$emit('delete', this.title);
+                }
+            }
+        });
+
+        Vue.component('todo-list', {
+            template: `
+            <ul>
+                <todo-item @delete="handleDelete" v-for="item in list" :title="item.title" :del="item.del"></todo-item>
+            </ul>
+            `,
+            data: function () {
+                return {
+                    list: [
+                        {
+                            title: 'php',
+                            del: true,
+                        },
+                        {
+                            title: 'vue',
+                            del: false,
+                        }
+                    ]
+                }
+            },
+            methods: {
+                handleDelete(title) {
+                    console.log("delete", title)
+                }
+            }
+        });
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+
+            }
+        });
+    </script>
+</body>
+
+</html>
